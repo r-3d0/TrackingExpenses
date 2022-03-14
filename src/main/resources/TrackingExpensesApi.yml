@@ -1,0 +1,437 @@
+openapi: 3.0.2
+info:
+  title: TrackingExpenses
+  version: 1.0.0
+  description: A simple api to track personal expenses
+paths:
+  /getExpenses:
+    get:
+      parameters:
+        -
+          name: category
+          description: |-
+            Requests all the epenses by category
+            {
+                Rent
+                Groceries
+                Restaurants
+                Electricity
+                Water
+                Internet
+                Investing
+                Entertainment
+                Subscriptions
+                Others
+            }
+          schema:
+            type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseTO'
+              examples:
+                february expenses:
+                  value:
+                    -
+                      id: 52
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Restaurants
+                      preu: 34
+                    -
+                      id: 33
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Restaurants
+                      preu: 79
+          description: List of all expenses
+  /addExpense:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseTO'
+            examples:
+              Expense example:
+                value:
+                  id: 63
+                  date: '2018-02-10T09:30Z'
+                  description: some text
+                  category: Entertainment
+                  preu: 69
+        required: true
+      responses:
+        '201':
+          description: Expense created
+  /addExpenses:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExpenseTO'
+            examples:
+              list of expenses to save:
+                value:
+                  -
+                    id: 50
+                    date: '2018-02-10T09:30Z'
+                    description: some text
+                    category: Entertainment
+                    preu: 32
+                  -
+                    id: 84
+                    date: '2018-02-10T09:30Z'
+                    description: some text
+                    category: Restaurants
+                    preu: 92
+        required: true
+      responses:
+        '201':
+          description: Expenses created
+  '/getExpenses/{category}/{year}':
+    get:
+      parameters:
+        -
+          examples:
+            Category:
+              value: '"Restaurants"'
+          name: category
+          description: Category which we want to query for
+          schema:
+            type: string
+          in: path
+          required: true
+        -
+          examples:
+            '2022':
+              value: '2022'
+          name: year
+          description: year which we want to query for
+          schema:
+            type: integer
+          in: path
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseTO'
+              examples:
+                expenses by category and year:
+                  value:
+                    -
+                      id: 96
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Others
+                      preu: 96
+                    -
+                      id: 78
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Subscriptions
+                      preu: 32
+          description: list of expenses by category and year
+  '/getExpenses/{category}/{year}/{month}':
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseTO'
+              examples:
+                list of expenses:
+                  value:
+                    -
+                      id: 17
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Groceries
+                      preu: 33
+                    -
+                      id: 79
+                      date: '2018-02-10T09:30Z'
+                      description: some text
+                      category: Restaurants
+                      preu: 7
+          description: 'List of expenses by category, year and month'
+    parameters:
+      -
+        examples:
+          Others:
+            value: '"Otherst"'
+        name: category
+        description: category name for the category to query the expenses
+        schema:
+          type: string
+        in: path
+        required: true
+      -
+        examples:
+          '2022':
+            value: '2022'
+        name: year
+        description: the year we want to query the expenses
+        schema:
+          type: integer
+        in: path
+        required: true
+      -
+        examples:
+          June:
+            value: '"June"'
+        name: month
+        description: the month we want to query the expenses
+        schema:
+          enum:
+            - January
+            - February
+            - March
+            - April
+            - May
+            - June
+            - July
+            - August
+            - September
+            - October
+            - November
+            - December
+          type: string
+        in: path
+        required: true
+  '/getExpenses/{category}/{year}/{month}/{day}':
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseTO'
+              examples:
+                expenses list:
+                  value:
+                    -
+                      Description: some text
+                      Category:
+                        id: 59
+                        categoryName: some text
+                        isSplittable: true
+                      Id: 20.17
+                      Price: 35.4
+                      IsSplittable: true
+                      Parts: 77
+                    -
+                      Description: some text
+                      Category:
+                        id: 43
+                        categoryName: some text
+                        isSplittable: true
+                      Id: 6.42
+                      Price: 17.5
+                      IsSplittable: true
+                      Parts: 70
+          description: 'returns the expenses given a category, year, month, day'
+    parameters:
+      -
+        examples:
+          category All:
+            value: '"All"'
+        name: category
+        description: Category wich we want to query
+        schema:
+          type: string
+        in: path
+        required: true
+      -
+        examples:
+          year 2020:
+            value: '2020'
+        name: year
+        description: year wich we want to query
+        schema:
+          type: integer
+        in: path
+        required: true
+      -
+        examples:
+          month:
+            value: '"February"'
+        name: month
+        description: month wich we want to query
+        schema:
+          enum:
+            - January
+            - February
+            - March
+            - April
+            - May
+            - June
+            - July
+            - August
+            - September
+            - October
+            - November
+            - December
+          type: string
+        in: path
+        required: true
+      -
+        examples:
+          30th:
+            value: '"30"'
+        name: day
+        description: day wich we want to query
+        schema:
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+            - '6'
+            - '7'
+            - '8'
+            - '9'
+            - '10'
+            - '11'
+            - '12'
+            - '13'
+            - '14'
+            - '15'
+            - '16'
+            - '17'
+            - '18'
+            - '19'
+            - '20'
+            - '21'
+            - '22'
+            - '23'
+            - '24'
+            - '25'
+            - '26'
+            - '27'
+            - '28'
+            - '29'
+            - '30'
+            - '31'
+          type: string
+        in: path
+        required: true
+  /getCategories:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseCategoryTO'
+              examples:
+                categories list:
+                  value:
+                    -
+                      id: 6
+                      categoryName: All
+                      isSplittable: false
+                    -
+                      id: 36
+                      categoryName: Restaurants
+                      isSplittable: true
+                    -
+                      id: 46
+                      categoryName: Rent
+                      isSplittable: true
+          description: List of categories wich we can use to perform queries
+  /addCategory:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCategoryTO'
+            examples:
+              category example:
+                value:
+                  id: 22
+                  categoryName: some text
+                  isSplittable: true
+        required: true
+      responses:
+        '201':
+          description: response for category creation
+components:
+  schemas:
+    ExpenseCategoryTO:
+      title: Root Type for ExpenseCategoryTO
+      description: Defines the type of category of an expense
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        categoryName:
+          type: string
+        isSplittable:
+          type: boolean
+      example:
+        id: 2
+        categoryName: Bars_Restaurants
+        isSplittable: false
+    ExpenseTO:
+      description: Data Type for an expense
+      required:
+        - Id
+        - Description
+        - Category
+        - Price
+        - IsSplittable
+      type: object
+      properties:
+        Description:
+          description: Description of the expense
+          type: string
+          example: Restaurant balblababla dla
+        Category:
+          $ref: '#/components/schemas/ExpenseCategoryTO'
+          description: Category of the expense
+        Id:
+          description: unique id for the expense
+          type: number
+        Price:
+          description: Price of the expense
+          type: number
+        IsSplittable:
+          description: flag wich indicates if the expense is splittable
+          type: boolean
+        Parts:
+          description: Parts in wich the expense can be splitted (only if isSplittable is true)
+          type: integer
+      example:
+        Id: 123456
+        Description: Restaurant balbalbal
+        Category: Restaurants
+        Price: 24.55
+        isSplittable: true
+        Parts: 2
+  responses:
+    ExpensesList:
+      description: Expenses returned by the query given the pathvariables
